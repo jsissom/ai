@@ -1,20 +1,26 @@
-class MiniMaxPlayer
+class AlphaBetaPlayer
+  attr_accessor :evaluations
+
   def initialize(my_letter)
     @my_letter = my_letter
+    @evaluations = 0
   end
 
   def name
-    'MiniMax'
+    'AlphaBeta'
   end
 
   MoveScore = Struct.new(:move,:score)
 
   def make_move(game,level)
-    move,score = max_score(game,level)
+    @evaluations = 0
+    alpha = -1.0/0.0
+    beta = +1.0/0.0
+    move,score = max_score(game,level,alpha,beta)
     move
   end
 
-  def max_score(game,level)
+  def max_score(game,level,alpha,beta)
     best_square = nil
     best_score = -1000
 
@@ -23,7 +29,10 @@ class MiniMaxPlayer
       if temp.over?
         move_score = score(temp,level+1)
       else
-        move,move_score = min_score(temp,level+1)
+        move,move_score = min_score(temp,level+1,alpha,beta)
+
+        alpha = move_score if move_score > alpha
+        return [move,alpha] if alpha >= beta
       end
 
       if move_score > best_score
@@ -35,7 +44,7 @@ class MiniMaxPlayer
     [best_square,best_score]
   end
   
-  def min_score(game,level)
+  def min_score(game,level,alpha,beta)
     best_square = nil
     best_score = 1000
 
@@ -44,7 +53,10 @@ class MiniMaxPlayer
       if temp.over?
         move_score = score(temp,level+1)
       else
-        move,move_score = max_score(temp,level+1)
+        move,move_score = max_score(temp,level+1,alpha,beta)
+
+        beta = move_score if move_score < beta
+        return [move,beta] if alpha >= beta
       end
 
       if move_score < best_score
@@ -63,6 +75,7 @@ class MiniMaxPlayer
   # have won, negative if other has won
   # 0 if no one won or tie
   def score(board,level)
+    @evaluations += 1
     return (10 - level) if board.win?(me)
     return 0 - (10 - level) if board.win?(other_player)
 
