@@ -1,6 +1,9 @@
 class MiniMaxPlayer
+  attr_accessor :evals
+
   def initialize(my_letter)
     @my_letter = my_letter
+    @evals = 0
   end
 
   def name
@@ -15,6 +18,7 @@ class MiniMaxPlayer
   end
 
   def max_score(game,level)
+   @evals += 1
     best_square = nil
     best_score = -1000
 
@@ -36,6 +40,7 @@ class MiniMaxPlayer
   end
   
   def min_score(game,level)
+    @evals += 1
     best_square = nil
     best_score = 1000
 

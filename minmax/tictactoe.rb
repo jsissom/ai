@@ -180,6 +180,7 @@ class Play
         @t.print_status
       end
     end
+    puts "Evaluations: #{@x.evals}"
   end
 end
 
