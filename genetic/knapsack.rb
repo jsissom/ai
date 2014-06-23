@@ -183,12 +183,6 @@ class Population
     (@size - s).times { @chromosomes.push(Knapsack.new_random(@weight)) }
   end
 
-  def fill_with_mutated!(x)
-    x.mutate
-    s = @chromosomes.length
-    (@size - s).times { @chromosomes.push(x) }
-  end
-
   def get(i)
     @chromosomes[i]
   end
@@ -197,7 +191,7 @@ class Population
     @chromosomes.sort_by! { |a| 0 - a.score }
   end
 
-  def print
+  def print_all
     @chromosomes.each_with_index { |c,i| print_one(c,i) }
   end
 
@@ -217,15 +211,15 @@ class Population
     c2 = Random.rand(@chromosomes.length) while c2 == c1
 
     cc1,cc2 = @chromosomes[c1].mate_with(@chromosomes[c2])
-      @chromosomes.push(Knapsack.new_value(@weight,cc1))
-      @chromosomes.push(Knapsack.new_value(@weight,cc2))
+    @chromosomes.push(Knapsack.new_value(@weight,cc1))
+    @chromosomes.push(Knapsack.new_value(@weight,cc2))
   end
 
   def generation
     sort!
     kill!
     mate!
-    fill_with_mutated!(@chromosomes[0])
+    fill_with_random!
     sort!
   end
 end
